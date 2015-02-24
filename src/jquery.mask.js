@@ -416,23 +416,26 @@
 
     $.fn.mask = function(mask, options) {
         options = options || {};
-        var selector = this.selector,
-            globals = $.jMaskGlobals,
-            interval = $.jMaskGlobals.watchInterval,
-            maskFunction = function() {
-                if (notSameMaskObject(this, mask, options)) {
-                    return $(this).data('mask', new Mask(this, mask, options));
-                }
-            };
+
+        // var selector = this.selector,
+        //     globals = $.jMaskGlobals,
+        //     interval = $.jMaskGlobals.watchInterval;
+
+        var maskFunction = function() {
+            if (notSameMaskObject(this, mask, options)) {
+                return $(this).data('mask', new Mask(this, mask, options));
+            }
+        };
 
         $(this).each(maskFunction);
 
-        if (selector && selector !== '' && globals.watchInputs) {
-            clearInterval($.maskWatchers[selector]);
-            $.maskWatchers[selector] = setInterval(function(){
-                $(document).find(selector).each(maskFunction);
-            }, interval);
-        }
+        // if (selector && selector !== '' && globals.watchInputs) {
+        //     clearInterval($.maskWatchers[selector]);
+        //     $.maskWatchers[selector] = setInterval(function(){
+        //         $(document).find(selector).each(maskFunction);
+        //     }, interval);
+        // }
+
         return this;
     };
 
@@ -452,8 +455,9 @@
     };
 
     $.applyDataMask = function(selector) {
-      selector = selector || $.jMaskGlobals.maskElements;
-      $(selector).filter($.jMaskGlobals.dataMaskAttr).each(HTMLAttributes);
+        selector = selector || $.jMaskGlobals.maskElements;
+        var $selector = (selector instanceof $) ? selector : $(selector);
+        $selector.filter($.jMaskGlobals.dataMaskAttr).each(HTMLAttributes);
     };
 
     var globals = {
@@ -480,6 +484,6 @@
     if (globals.dataMask) { $.applyDataMask(); }
 
     if ($.jMaskGlobals.watchDataMask) {
-      setInterval($.applyDataMask, $.jMaskGlobals.watchInterval);
+        setInterval($.applyDataMask, $.jMaskGlobals.watchInterval);
     }
 }));
