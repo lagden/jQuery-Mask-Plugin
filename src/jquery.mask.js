@@ -377,7 +377,6 @@
         jMask.init(!el.is('input'));
     };
 
-    $.maskWatchers = {};
     var HTMLAttributes = function () {
             var input = $(this),
                 options = {},
@@ -417,10 +416,6 @@
     $.fn.mask = function(mask, options) {
         options = options || {};
 
-        // var selector = this.selector,
-        //     globals = $.jMaskGlobals,
-        //     interval = $.jMaskGlobals.watchInterval;
-
         var maskFunction = function() {
             if (notSameMaskObject(this, mask, options)) {
                 return $(this).data('mask', new Mask(this, mask, options));
@@ -429,19 +424,10 @@
 
         $(this).each(maskFunction);
 
-        // if (selector && selector !== '' && globals.watchInputs) {
-        //     clearInterval($.maskWatchers[selector]);
-        //     $.maskWatchers[selector] = setInterval(function(){
-        //         $(document).find(selector).each(maskFunction);
-        //     }, interval);
-        // }
-
         return this;
     };
 
     $.fn.unmask = function() {
-        clearInterval($.maskWatchers[this.selector]);
-        delete $.maskWatchers[this.selector];
         return this.each(function() {
             var dataMask = $(this).data('mask');
             if (dataMask) {
@@ -466,7 +452,6 @@
         dataMask: true,
         watchInterval: 300,
         watchInputs: true,
-        watchDataMask: false,
         byPassKeys: [9, 16, 17, 18, 36, 37, 38, 39, 40, 91],
         translation: {
             '0': {pattern: /\d/},
@@ -482,8 +467,4 @@
 
     // looking for inputs with data-mask attribute
     if (globals.dataMask) { $.applyDataMask(); }
-
-    if ($.jMaskGlobals.watchDataMask) {
-        setInterval($.applyDataMask, $.jMaskGlobals.watchInterval);
-    }
 }));
